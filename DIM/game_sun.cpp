@@ -10,14 +10,16 @@ SunObject::SunObject(SDL_Surface* srf, SDL_Renderer *renderer) : GameObject(srf,
 	frames[2].x = 64;
 	frames[2].y = 0;
 
-	SDL_Rect rec;
-	rec.x = 50;
-	rec.y = 25;
-	rec.w = 128;
-	rec.h = 128;
-	position = rec;
+	position.x = 50;
+	position.y = 25;
+	position.w = 128;
+	position.h = 128;
 }
 
-SDL_Rect* SunObject::getRect(const int &frameCount) {
-	return &frames[(frameCount/frameskip)%FRAMES];
+void SunObject::advance(const int &frameCount) {
+	currentFrame = (frameCount/frameskip)%FRAMES;
+}
+
+SDL_Rect* SunObject::getRect() {
+	return &frames[currentFrame];
 }

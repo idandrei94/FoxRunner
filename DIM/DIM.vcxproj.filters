@@ -30,6 +30,9 @@
     <ClCompile Include="background_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_coin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mySDL_init.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="background_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_coin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

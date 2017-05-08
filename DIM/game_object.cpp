@@ -7,7 +7,7 @@ SDL_Texture* GameObject::getTexture() {
 	return texture;
 }
 
-const SDL_Rect* GameObject::getRect(const int &frameCount) {
+const SDL_Rect* GameObject::getRect() {
 	return NULL;
 }
 
@@ -17,4 +17,8 @@ void GameObject::setPosition(const SDL_Rect &rec) {
 
 SDL_Rect* GameObject::getPosition() {
 	return &position;
+}
+
+void GameObject::advance(const int &frameCount) {
+
 }

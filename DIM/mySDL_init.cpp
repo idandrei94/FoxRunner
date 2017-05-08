@@ -7,7 +7,11 @@
 #include "game_object.h"
 #include <SDL_image.h>
 #include "background_object.h"
+#include "game_coin.h"
 
+
+// The game speed
+const int gSpeed = 4;
 
 //The window we'll be rendering to
 SDL_Window* gWindow = nullptr;
@@ -19,11 +23,15 @@ SDL_Surface* gScreenSurface = nullptr;
 SDL_Surface* gBackground1 = nullptr;
 SDL_Surface* gBackground2 = nullptr;
 
+//The sun sprite sheet
+SDL_Surface* gSun = nullptr;
+
+//The coin sprite sheet
+SDL_Surface* gCoin = nullptr;
+
 //Game renderer
 SDL_Renderer* gRenderer = nullptr;
 
-//The sun sprite sheet
-SDL_Surface* gSun = nullptr;
 
 //Starts up SDL and creates the window
 bool init();
@@ -123,6 +131,13 @@ bool loadMedia() {
 		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
 		success = false;
 	}
+
+	gCoin = loadSurface("res/coin.png");
+	if (gCoin == NULL) {
+		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
+		success = false;
+	}
+
 	return success;
 }
 
@@ -183,7 +198,10 @@ int startGame() {
 
 		//loop through objects
 		for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
-			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(frame), (*it)->getPosition());
+			(*it)->advance(frame);
+			const SDL_Rect* rec = (*it)->getRect();
+			printf("{ %d, %d, %d, %d }\n", rec->x, rec->y, rec->w, rec->x);
+			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(), (*it)->getPosition());
 		}
 		//Update the surface
 		SDL_UpdateWindowSurface(gWindow);
@@ -215,13 +233,17 @@ SDL_Surface* loadSurface(std::string path) {
 
 
 void initGameObjects() {
-	backgroundObject = new BackgroundObject(4, gBackground1, gRenderer);
+	backgroundObject = new BackgroundObject(gSpeed, gBackground1, gRenderer);
 	backgroundObject->addBackground(gBackground2, gRenderer);
 	backgroundObject->addBackground(gBackground2, gRenderer);
 	backgroundObject->addBackground(gBackground2, gRenderer);
 	backgroundObject->addBackground(gBackground1, gRenderer);
 	backgroundObject->addBackground(gBackground1, gRenderer);
 	backgroundObject->addBackground(gBackground2, gRenderer);
+
 	SunObject* sun = new SunObject(gSun, gRenderer);
 	gameObjects.push_back(sun);
+
+	CoinObject* coin = new CoinObject(gSpeed, gCoin, gRenderer);
+	gameObjects.push_back(coin);
 }

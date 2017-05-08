@@ -24,7 +24,6 @@ void BackgroundObject::advance() {
 	else {
 		rightRec.x -= speed;
 	}
-	printf("Left x >>> %d\t\t %d <<< Right x\n", leftRec.x, rightRec.x);
 }
 
 SDL_Rect* BackgroundObject::getLeftOffset() {

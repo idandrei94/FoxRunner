@@ -11,5 +11,6 @@ private:
 	int currentFrame = 0;
 public:
 	SunObject(SDL_Surface* srf, SDL_Renderer *renderer);
-	SDL_Rect* getRect(const int &frameCount);
+	void advance(const int &frameCount);
+	SDL_Rect* getRect();
 };
