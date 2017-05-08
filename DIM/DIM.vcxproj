@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="background_object.cpp" />
+    <ClCompile Include="game_dog.cpp" />
+    <ClCompile Include="game_fox.cpp" />
     <ClCompile Include="game_coin.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="game_sun.cpp" />
@@ -29,6 +31,8 @@
   <ItemGroup>
     <ClInclude Include="background_object.h" />
     <ClInclude Include="game_coin.h" />
+    <ClInclude Include="game_dog.h" />
+    <ClInclude Include="game_fox.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="game_sun.h" />
     <ClInclude Include="mySDL_init.h" />

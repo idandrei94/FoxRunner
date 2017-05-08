@@ -13,7 +13,7 @@ CoinObject::CoinObject(int speed, SDL_Surface* srf, SDL_Renderer *renderer) : Ga
 	frames[3].x = 32;
 	frames[3].y = 32;
 
-	position = { 320, 240, 32, 32 };
+	position = { 320, 260, 32, 32 };
 }
 
 

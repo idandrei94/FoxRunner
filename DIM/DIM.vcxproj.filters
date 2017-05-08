@@ -33,6 +33,12 @@
     <ClCompile Include="game_coin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_fox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_dog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mySDL_init.h">
@@ -48,6 +54,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game_coin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_fox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_dog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

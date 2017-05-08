@@ -8,10 +8,12 @@
 #include <SDL_image.h>
 #include "background_object.h"
 #include "game_coin.h"
+#include "game_fox.h"
+#include "game_dog.h"
 
 
 // The game speed
-const int gSpeed = 4;
+const int gSpeed = 8;
 
 //The window we'll be rendering to
 SDL_Window* gWindow = nullptr;
@@ -28,6 +30,12 @@ SDL_Surface* gSun = nullptr;
 
 //The coin sprite sheet
 SDL_Surface* gCoin = nullptr;
+
+//The player fox spritesheet
+SDL_Surface *gFox = nullptr;
+
+//The obstacle dog spritesheet
+SDL_Surface* gDog = nullptr;
 
 //Game renderer
 SDL_Renderer* gRenderer = nullptr;
@@ -134,7 +142,19 @@ bool loadMedia() {
 
 	gCoin = loadSurface("res/coin.png");
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
+		printf("Unable to load image %s! SDL Error: %s\n", "res/coin.png", SDL_GetError());
+		success = false;
+	}
+
+	gFox = loadSurface("res/fox.png");
+	if (gCoin == NULL) {
+		printf("Unable to load image %s! SDL Error: %s\n", "res/fox.png", SDL_GetError());
+		success = false;
+	}
+
+	gDog = loadSurface("res/dog.png");
+	if (gCoin == NULL) {
+		printf("Unable to load image %s! SDL Error: %s\n", "res/dog.png", SDL_GetError());
 		success = false;
 	}
 
@@ -145,8 +165,14 @@ void close() {
 	//Deallocate surface
 	SDL_FreeSurface(gBackground1);
 	SDL_FreeSurface(gSun);
+	SDL_FreeSurface(gCoin);
+	SDL_FreeSurface(gFox);
+	SDL_FreeSurface(gDog);
 	gBackground1 = nullptr;
 	gSun = nullptr;
+	gCoin = nullptr;
+	gFox = nullptr;
+	gDog = nullptr;
 
 	//Destroy window
 	SDL_DestroyWindow(gWindow);
@@ -199,8 +225,6 @@ int startGame() {
 		//loop through objects
 		for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
 			(*it)->advance(frame);
-			const SDL_Rect* rec = (*it)->getRect();
-			printf("{ %d, %d, %d, %d }\n", rec->x, rec->y, rec->w, rec->x);
 			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(), (*it)->getPosition());
 		}
 		//Update the surface
@@ -244,6 +268,12 @@ void initGameObjects() {
 	SunObject* sun = new SunObject(gSun, gRenderer);
 	gameObjects.push_back(sun);
 
+	FoxObject* fox = new FoxObject(gFox, gRenderer);
+	gameObjects.push_back(fox);
+
 	CoinObject* coin = new CoinObject(gSpeed, gCoin, gRenderer);
 	gameObjects.push_back(coin);
+
+	DogObject* dog = new DogObject(gSpeed, gDog, gRenderer);
+	gameObjects.push_back(dog);
 }
