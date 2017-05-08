@@ -1,10 +1,12 @@
 #include "mySDL_init.h"
 #include <stdio.h>
 #include <string>
-#include <vector>
+#include <deque>
 
 #include "game_sun.h"
 #include "game_object.h"
+#include <SDL_image.h>
+#include "background_object.h"
 
 
 //The window we'll be rendering to
@@ -14,7 +16,11 @@ SDL_Window* gWindow = nullptr;
 SDL_Surface* gScreenSurface = nullptr;
 
 //The background image
-SDL_Surface* gBackground = nullptr;
+SDL_Surface* gBackground1 = nullptr;
+SDL_Surface* gBackground2 = nullptr;
+
+//Game renderer
+SDL_Renderer* gRenderer = nullptr;
 
 //The sun sprite sheet
 SDL_Surface* gSun = nullptr;
@@ -35,14 +41,17 @@ SDL_Surface* loadSurface(std::string path);
 void initGameObjects();
 
 // List containing all game objects
-std::vector<GameObject*> gameObjects;
+std::deque<GameObject*> gameObjects;
+
+// Background slider object
+BackgroundObject *backgroundObject = nullptr;
 
 // Clear all the objects from memory
-void clearGameObjects(std::vector<GameObject*>* list) {
-	for (std::vector<GameObject*>::iterator it = list->begin(); it <= list->end(); it++) {
+void clearGameObjects() {
+	for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
 		delete(*it);
 	}
-	delete list;
+	delete backgroundObject;
 }
 
 
@@ -66,8 +75,25 @@ bool init() {
 		}
 		else
 		{
-			//Get window surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
+			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+			if (gRenderer == NULL)
+			{
+				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+				success = false;
+			}
+			else
+			{
+				//Initialize renderer color
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+				//Initialize PNG loading
+				int imgFlags = IMG_INIT_PNG;
+				if (!(IMG_Init(imgFlags) & imgFlags))
+				{
+					printf("SDL_image could not initialize!\n");
+					//success = false;
+				}
+			}
 		}
 	}
 	return success;
@@ -78,29 +104,40 @@ bool loadMedia() {
 	bool success = true;
 
 	//Load splash image
-	gBackground = loadSurface("res/background1.bmp");
-	if (gBackground == NULL)
+	gBackground1 = loadSurface("res/background1.png");
+	if (gBackground1 == NULL)
 	{
-		printf("Unable to load image %s! SDL Error: %s\n", "res/background1.bmp", SDL_GetError());
+		printf("Unable to load image %s! SDL Error: %s\n", "res/background1.png", SDL_GetError());
 		success = false;
 	}
 
-	gSun = loadSurface("res/sun.bmp");
+	gBackground2 = loadSurface("res/background2.png");
+	if (gBackground2 == NULL)
+	{
+		printf("Unable to load image %s! SDL Error: %s\n", "res/background2.png", SDL_GetError());
+		success = false;
+	}
+
+	gSun = loadSurface("res/sun.png");
 	if (gSun == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.bmp", SDL_GetError());
+		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
 		success = false;
 	}
 	return success;
 }
 
-void close() {//Deallocate surface
-	SDL_FreeSurface(gBackground);
-	gBackground = nullptr;
+void close() {
+	//Deallocate surface
+	SDL_FreeSurface(gBackground1);
+	SDL_FreeSurface(gSun);
+	gBackground1 = nullptr;
+	gSun = nullptr;
 
 	//Destroy window
 	SDL_DestroyWindow(gWindow);
 	gWindow = nullptr;
 
+	clearGameObjects();
 	//Quit SDL subsystems
 	SDL_Quit();
 }
@@ -123,6 +160,7 @@ int startGame() {
 
 	//Event handler
 	SDL_Event e;
+	int frame = 0;
 	while (!quit) {
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -132,13 +170,27 @@ int startGame() {
 				quit = true;
 			}
 		}
-		SDL_BlitSurface(gBackground, NULL, gScreenSurface, NULL);
+
+		//Clear screen
+		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+		SDL_RenderClear(gRenderer);
+
+		//SDL_RenderCopy(gRenderer, SDL_CreateTextureFromSurface(gRenderer, gBackground1), NULL, NULL);
+
+		backgroundObject->advance();
+		SDL_RenderCopy(gRenderer, backgroundObject->getLeftTexture(), NULL, backgroundObject->getLeftOffset());
+		SDL_RenderCopy(gRenderer, backgroundObject->getRightTexture(), NULL, backgroundObject->getRightOffset());
+
 		//loop through objects
-		for (std::vector<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
-			SDL_BlitScaled((*it)->getSurface(), (*it)->getRect(), gScreenSurface, (*it)->getPosition());
+		for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
+			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(frame), (*it)->getPosition());
 		}
 		//Update the surface
 		SDL_UpdateWindowSurface(gWindow);
+
+
+		SDL_RenderPresent(gRenderer);
+		++frame;
 	}
 	close();
 	return 0;
@@ -146,35 +198,30 @@ int startGame() {
 
 SDL_Surface* loadSurface(std::string path) {
 
-	//The final optimized image
-	SDL_Surface* optimizedSurface = nullptr;
-
 	//Load image at specified path
-	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == nullptr)
 	{
 		printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
 	}
 	else
 	{
-		//Convert surface to screen format
-		optimizedSurface = SDL_ConvertSurface(loadedSurface, gScreenSurface->format, NULL);
-		if (optimizedSurface == NULL)
-		{
-			printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-		}
-		else {
-			SDL_SetColorKey(optimizedSurface, SDL_TRUE, SDL_MapRGB(optimizedSurface->format, 0,0,0));
-		}
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0, 0));
 		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
 	}
 
-	return optimizedSurface;
+	return loadedSurface;
 }
 
 
 void initGameObjects() {
-	SunObject* sun = new SunObject(gSun);
+	backgroundObject = new BackgroundObject(4, gBackground1, gRenderer);
+	backgroundObject->addBackground(gBackground2, gRenderer);
+	backgroundObject->addBackground(gBackground2, gRenderer);
+	backgroundObject->addBackground(gBackground2, gRenderer);
+	backgroundObject->addBackground(gBackground1, gRenderer);
+	backgroundObject->addBackground(gBackground1, gRenderer);
+	backgroundObject->addBackground(gBackground2, gRenderer);
+	SunObject* sun = new SunObject(gSun, gRenderer);
 	gameObjects.push_back(sun);
 }

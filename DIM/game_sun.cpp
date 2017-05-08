@@ -1,6 +1,6 @@
 #include "game_sun.h"
 
-SunObject::SunObject(SDL_Surface* srf) : GameObject(srf) {
+SunObject::SunObject(SDL_Surface* srf, SDL_Renderer *renderer) : GameObject(srf, renderer) {
 	frames[0].w = frames[1].w = frames[2].w = 64;
 	frames[0].h = frames[1].h = frames[2].h = 64;
 	frames[0].x = 0;
@@ -18,13 +18,6 @@ SunObject::SunObject(SDL_Surface* srf) : GameObject(srf) {
 	position = rec;
 }
 
-SDL_Rect* SunObject::getRect() {
-	if (frameCounter <= frameskip) {
-		frameCounter++;
-	}
-	else {
-		frameCounter = 0;
-		currentFrame = (currentFrame + 1) % FRAMES;
-	}
-	return &frames[currentFrame];
+SDL_Rect* SunObject::getRect(const int &frameCount) {
+	return &frames[(frameCount/frameskip)%FRAMES];
 }

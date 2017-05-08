@@ -1,13 +1,13 @@
 #include "game_object.h"
 
 // Constructor, init the surface attribute with srf
-GameObject::GameObject(SDL_Surface* srf) : surface(srf) {}
+GameObject::GameObject(SDL_Surface* srf, SDL_Renderer* renderer) : texture(SDL_CreateTextureFromSurface(renderer, srf)) {}
 
-SDL_Surface* GameObject::getSurface() {
-	return surface;
+SDL_Texture* GameObject::getTexture() {
+	return texture;
 }
 
-const SDL_Rect* GameObject::getRect() {
+const SDL_Rect* GameObject::getRect(const int &frameCount) {
 	return NULL;
 }
 

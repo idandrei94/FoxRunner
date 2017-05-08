@@ -5,11 +5,11 @@ class SunObject : public GameObject {
 public:
 	static const int FRAMES = 3;
 private:
-	const int frameskip = 60;
+	const int frameskip = 30;
 	SDL_Rect frames[FRAMES];
 	int frameCounter = 0;
 	int currentFrame = 0;
 public:
-	SunObject(SDL_Surface* srf);
-	SDL_Rect* getRect();
+	SunObject(SDL_Surface* srf, SDL_Renderer *renderer);
+	SDL_Rect* getRect(const int &frameCount);
 };
