@@ -1,7 +1,6 @@
 #include "mySDL_init.h"
 #include <stdio.h>
 #include <string>
-#include <deque>
 
 #include "game_sun.h"
 #include "game_object.h"
@@ -10,10 +9,13 @@
 #include "game_coin.h"
 #include "game_fox.h"
 #include "game_dog.h"
-
+#include <list>
+#include "game_manager.h"
+#include <memory>
 
 // The game speed
 const int gSpeed = 8;
+int FRAME_COUNT = 0; 
 
 //The window we'll be rendering to
 SDL_Window* gWindow = nullptr;
@@ -26,20 +28,22 @@ SDL_Surface* gBackground1 = nullptr;
 SDL_Surface* gBackground2 = nullptr;
 
 //The sun sprite sheet
-SDL_Surface* gSun = nullptr;
+SDL_Texture* gSun = nullptr;
 
 //The coin sprite sheet
-SDL_Surface* gCoin = nullptr;
+SDL_Texture* gCoin = nullptr;
 
 //The player fox spritesheet
-SDL_Surface *gFox = nullptr;
+SDL_Texture *gFox = nullptr;
 
 //The obstacle dog spritesheet
-SDL_Surface* gDog = nullptr;
+SDL_Texture* gDog = nullptr;
 
 //Game renderer
 SDL_Renderer* gRenderer = nullptr;
 
+//Game manager, keeps track of score/collisions
+GameManager* gManager;
 
 //Starts up SDL and creates the window
 bool init();
@@ -57,16 +61,18 @@ SDL_Surface* loadSurface(std::string path);
 void initGameObjects();
 
 // List containing all game objects
-std::deque<GameObject*> gameObjects;
+std::list<std::shared_ptr<GameObject> > gameObjects;
+
+// List containing foreground game objects (displayed on top of the others)
+std::list<std::shared_ptr<GameObject> >foregroundGameObjects;
 
 // Background slider object
 BackgroundObject *backgroundObject = nullptr;
 
 // Clear all the objects from memory
 void clearGameObjects() {
-	for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
-		delete(*it);
-	}
+	gameObjects.clear();
+	foregroundGameObjects.clear();
 	delete backgroundObject;
 }
 
@@ -80,10 +86,10 @@ bool init() {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		success = false;
 	}
-	else
+	else 
 	{
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("The quick brown fox jumps over the lazy dog.", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -134,25 +140,25 @@ bool loadMedia() {
 		success = false;
 	}
 
-	gSun = loadSurface("res/sun.png");
+	gSun = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/sun.png"));
 	if (gSun == NULL) {
 		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
 		success = false;
 	}
 
-	gCoin = loadSurface("res/coin.png");
+	gCoin = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/coin.png"));
 	if (gCoin == NULL) {
 		printf("Unable to load image %s! SDL Error: %s\n", "res/coin.png", SDL_GetError());
 		success = false;
 	}
 
-	gFox = loadSurface("res/fox.png");
+	gFox = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/fox.png"));
 	if (gCoin == NULL) {
 		printf("Unable to load image %s! SDL Error: %s\n", "res/fox.png", SDL_GetError());
 		success = false;
 	}
 
-	gDog = loadSurface("res/dog.png");
+	gDog = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/dog.png"));
 	if (gCoin == NULL) {
 		printf("Unable to load image %s! SDL Error: %s\n", "res/dog.png", SDL_GetError());
 		success = false;
@@ -164,10 +170,6 @@ bool loadMedia() {
 void close() {
 	//Deallocate surface
 	SDL_FreeSurface(gBackground1);
-	SDL_FreeSurface(gSun);
-	SDL_FreeSurface(gCoin);
-	SDL_FreeSurface(gFox);
-	SDL_FreeSurface(gDog);
 	gBackground1 = nullptr;
 	gSun = nullptr;
 	gCoin = nullptr;
@@ -201,7 +203,6 @@ int startGame() {
 
 	//Event handler
 	SDL_Event e;
-	int frame = 0;
 	while (!quit) {
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -216,15 +217,24 @@ int startGame() {
 		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 		SDL_RenderClear(gRenderer);
 
-		//SDL_RenderCopy(gRenderer, SDL_CreateTextureFromSurface(gRenderer, gBackground1), NULL, NULL);
+		gManager->cleanup(gameObjects, foregroundGameObjects);
+		gManager->generate(gameObjects, foregroundGameObjects, gCoin, gDog, nullptr, gRenderer);
+		if (gManager->manage(gameObjects) == GameManagerCodes::GAME_END) {
+			printf("Hit a dog, game should stop\n");
+			//quit = true;
+		}
 
 		backgroundObject->advance();
 		SDL_RenderCopy(gRenderer, backgroundObject->getLeftTexture(), NULL, backgroundObject->getLeftOffset());
 		SDL_RenderCopy(gRenderer, backgroundObject->getRightTexture(), NULL, backgroundObject->getRightOffset());
 
 		//loop through objects
-		for (std::deque<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
-			(*it)->advance(frame);
+		for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
+			(*it)->advance(FRAME_COUNT);
+			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(), (*it)->getPosition());
+		}
+		for (std::list<std::shared_ptr<GameObject> >::iterator it = foregroundGameObjects.begin(); it != foregroundGameObjects.end(); ++it) {
+			(*it)->advance(FRAME_COUNT);
 			SDL_RenderCopy(gRenderer, (*it)->getTexture(), (*it)->getRect(), (*it)->getPosition());
 		}
 		//Update the surface
@@ -232,7 +242,7 @@ int startGame() {
 
 
 		SDL_RenderPresent(gRenderer);
-		++frame;
+		++FRAME_COUNT;
 	}
 	close();
 	return 0;
@@ -265,15 +275,14 @@ void initGameObjects() {
 	backgroundObject->addBackground(gBackground1, gRenderer);
 	backgroundObject->addBackground(gBackground2, gRenderer);
 
-	SunObject* sun = new SunObject(gSun, gRenderer);
+	SDL_Rect pos = { 450, 25, 128, 128 };
+	std::shared_ptr<SunObject> sun( new SunObject(gSun, pos));
 	gameObjects.push_back(sun);
+	pos = { 5, 280, 120, 100 };
+	std::shared_ptr<FoxObject> fox( new FoxObject(gFox, pos));
+	foregroundGameObjects.push_back(fox);
 
-	FoxObject* fox = new FoxObject(gFox, gRenderer);
-	gameObjects.push_back(fox);
+	std::shared_ptr<ScoreObject> score(new ScoreObject());
 
-	CoinObject* coin = new CoinObject(gSpeed, gCoin, gRenderer);
-	gameObjects.push_back(coin);
-
-	DogObject* dog = new DogObject(gSpeed, gDog, gRenderer);
-	gameObjects.push_back(dog);
+	gManager = new GameManager(gSpeed, fox, score);
 }

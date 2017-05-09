@@ -1,6 +1,7 @@
 #include "game_coin.h"
+#include <stdio.h>
 
-CoinObject::CoinObject(int speed, SDL_Surface* srf, SDL_Renderer *renderer) : GameObject(srf, renderer) {
+CoinObject::CoinObject(int speed, SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	this->speed = speed;
 
 	frames[0].w = frames[1].w = frames[2].w = frames[3].w = frames[0].h = frames[1].h = frames[2].h = frames[3].h = 32;
@@ -13,16 +14,15 @@ CoinObject::CoinObject(int speed, SDL_Surface* srf, SDL_Renderer *renderer) : Ga
 	frames[3].x = 32;
 	frames[3].y = 32;
 
-	position = { 320, 260, 32, 32 };
+	collider.radius = 16;
+	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 }
 
 
 void CoinObject::advance(const int &frameCount) {
 	currentFrame = (frameCount / frameskip) % FRAMES;
 	position.x -= speed;
-	
-	if (position.x < 30)
-		position.x = 600;
+	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 }
 SDL_Rect* CoinObject::getRect() { 
 	return &frames[currentFrame]; 

@@ -1,7 +1,7 @@
 #include "game_fox.h"
 #include <stdio.h>
 
-FoxObject::FoxObject(SDL_Surface* srf, SDL_Renderer *renderer) : GameObject(srf, renderer) {
+FoxObject::FoxObject(SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	this->speed = speed;
 
 	frames[0].w = frames[1].w = frames[2].w = frames[3].w = frames[0].h = frames[1].h = frames[2].h = frames[3].h = 220;
@@ -14,7 +14,8 @@ FoxObject::FoxObject(SDL_Surface* srf, SDL_Renderer *renderer) : GameObject(srf,
 	frames[3].x = 220;
 	frames[3].y = 220;
 
-	position = { 5, 280, 120, 100 };
+	collider.radius = 40;
+	collider.x = { position.x + position.w/2, position.y + position.h/2 };
 }
 
 

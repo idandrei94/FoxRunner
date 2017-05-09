@@ -39,6 +39,12 @@
     <ClCompile Include="game_dog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="score_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mySDL_init.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game_dog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="score_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

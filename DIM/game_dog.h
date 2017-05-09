@@ -12,7 +12,7 @@ private:
 	int currentFrame = 0;
 	int speed;
 public:
-	DogObject(int speed, SDL_Surface* srf, SDL_Renderer *renderer);
+	DogObject(int speed, SDL_Texture* srf, SDL_Rect pos);
 	void advance(const int &frameCount);
 	SDL_Rect* getRect();
 };

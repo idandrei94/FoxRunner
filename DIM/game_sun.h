@@ -10,7 +10,7 @@ private:
 	int frameCounter = 0;
 	int currentFrame = 0;
 public:
-	SunObject(SDL_Surface* srf, SDL_Renderer *renderer);
+	SunObject(SDL_Texture* srf, SDL_Rect pos);
 	void advance(const int &frameCount);
 	SDL_Rect* getRect();
 };
