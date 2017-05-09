@@ -13,6 +13,8 @@
 #include "game_manager.h"
 #include <memory>
 
+#include <SDL_mixer.h>
+
 // The game speed
 const int gSpeed = 8;
 int FRAME_COUNT = 0; 
@@ -44,6 +46,12 @@ SDL_Renderer* gRenderer = nullptr;
 
 //Game manager, keeps track of score/collisions
 GameManager* gManager;
+
+// Responsible for sound
+Mix_Music* gMusic = nullptr;
+
+// Sound assets
+Mix_Chunk* gSong1 = nullptr;
 
 //Starts up SDL and creates the window
 bool init();
@@ -81,7 +89,7 @@ bool init() {
 	bool success = true;
 
 	//Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		success = false;
@@ -114,6 +122,10 @@ bool init() {
 				{
 					printf("SDL_image could not initialize!\n");
 					//success = false;
+				}
+				if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 2048) < 0) {
+					printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", SDL_GetError());
+					success = false;
 				}
 			}
 		}
@@ -164,6 +176,13 @@ bool loadMedia() {
 		success = false;
 	}
 
+	gSong1 = Mix_LoadWAV("res/OST1.wav");
+	if (gSong1 == NULL)
+	{
+		printf("Failed to load medium sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
 	return success;
 }
 
@@ -180,8 +199,21 @@ void close() {
 	SDL_DestroyWindow(gWindow);
 	gWindow = nullptr;
 
+	Mix_FreeChunk(gSong1);
+	gSong1 = nullptr;
+
+	Mix_FreeMusic(gMusic);
+	gMusic = nullptr;
+
+	SDL_DestroyRenderer(gRenderer);
+	SDL_DestroyWindow(gWindow);
+	gWindow = nullptr;
+	gRenderer = nullptr;
+
 	clearGameObjects();
 	//Quit SDL subsystems
+	Mix_Quit();
+	IMG_Quit();
 	SDL_Quit();
 }
 
@@ -203,6 +235,7 @@ int startGame() {
 
 	//Event handler
 	SDL_Event e;
+	Mix_PlayChannel(-1, gSong1, -1);
 	while (!quit) {
 		while (SDL_PollEvent(&e) != 0)
 		{
