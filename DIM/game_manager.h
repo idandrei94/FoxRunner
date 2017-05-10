@@ -2,6 +2,7 @@
 #include "game_fox.h"
 #include "score_object.h"
 #include <list>
+#include <SDL_ttf.h>
 #include <memory>
 
 // List containing all game objects
@@ -10,7 +11,11 @@ extern std::list<std::shared_ptr<GameObject> > gameObjects;
 // List containing foreground game objects (displayed on top of the others)
 extern std::list<std::shared_ptr<GameObject> >foregroundGameObjects;
 
+extern TTF_Font* gFont;
+
 extern SDL_Texture* gOver;
+
+extern SDL_Renderer* gRenderer;
 
 enum class GameManagerCodes{ GAME_CONTINUE, GAME_END};
 
@@ -29,7 +34,7 @@ enum class GameState {
 class GameManager {
 private:
 	/// TODO WE MUST CHANGE THIS TO MENU BY DEFAULT
-	GameState status = GameState :: STATUS_PLAYING;
+	GameState status = GameState :: STATUS_MENU;
 	std::shared_ptr<FoxObject> fox = nullptr;
 	std::shared_ptr<ScoreObject> score = nullptr;
 	int speed;

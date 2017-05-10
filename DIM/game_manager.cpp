@@ -37,9 +37,11 @@ GameManagerCodes GameManager::manage() {
 					// It's not a coin
 					// Remove the fox with the Game Over screen
 					foregroundGameObjects.remove(fox);
-					foregroundGameObjects.remove(score);
-					std::shared_ptr<GameObject> obj(new GameObject(gOver, { 0,0,640,480 }));
+					SDL_Rect pos = { 0,0,640,480 };
+					std::shared_ptr<GameObject> obj(new GameObject(gOver, pos));
 					foregroundGameObjects.push_back(obj);
+					pos = {230, 320, 180, 140};
+					score->setPosition(pos);
 					status = GameState::STATUS_DEAD;
 					return GameManagerCodes::GAME_END;
 				}
@@ -121,8 +123,10 @@ void GameManager::doAction(const KeyAction &action) {
 	case KeyAction::START_GAME:
 		if (status != GameState::STATUS_PLAYING) {
 			score->reset();
+			score->setPosition({ 475,410,140,70 });
 			status = GameState::STATUS_PLAYING;
 			foregroundGameObjects.clear();
+			foregroundGameObjects.push_front(score);
 			foregroundGameObjects.push_front(fox);
 		}
 		break;

@@ -8,8 +8,8 @@ struct CircularCollider {
 
 class GameObject {
 public:
-	GameObject(SDL_Texture* srf, SDL_Rect pos);
-	SDL_Texture* getTexture();
+	GameObject(SDL_Texture* srf, SDL_Rect &pos);
+	virtual SDL_Texture* getTexture();
 	// What area of the texture to show
 	virtual const SDL_Rect* getRect();
 	// Where is it on screen

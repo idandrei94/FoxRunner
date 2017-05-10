@@ -12,8 +12,9 @@
 #include <list>
 #include "game_manager.h"
 #include <memory>
-
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
+#include "object_text.h"
 
 // The game speed
 const int gSpeed = 8;
@@ -74,6 +75,9 @@ void initGameObjects();
 // Background slider object
 BackgroundObject *backgroundObject = nullptr;
 
+// True-type font used in the game
+TTF_Font *gFont = nullptr;
+
 // Clear all the objects from memory
 void clearGameObjects() {
 	gameObjects.clear();
@@ -122,6 +126,11 @@ bool init() {
 				}
 				if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 2048) < 0) {
 					printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", SDL_GetError());
+					success = false;
+				} 
+				if (TTF_Init() == -1)
+				{
+					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 					success = false;
 				}
 			}
@@ -183,6 +192,13 @@ bool loadMedia() {
 	if (gSong1 == NULL)
 	{
 		printf("Failed to load medium sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+	
+	gFont = TTF_OpenFont("res/font.ttf", 28);
+	if (gFont == NULL)
+	{
+		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
 	}
 
@@ -331,9 +347,15 @@ void initGameObjects() {
 	gameObjects.push_back(sun);
 	pos = { 5, 280, 120, 100 };
 	std::shared_ptr<FoxObject> fox( new FoxObject(gFox, pos));
-	foregroundGameObjects.push_back(fox);
+	//foregroundGameObjects.push_back(fox);
 
-	std::shared_ptr<ScoreObject> score(new ScoreObject());
+	pos = { 475,410,140,70 };
+	std::shared_ptr<ScoreObject> score(new ScoreObject(pos, gFont));
+	//foregroundGameObjects.push_front(score);
 
 	gManager = new GameManager(gSpeed, fox, score);
+
+	pos = { 60,145, 1500, 190 };
+	std::shared_ptr<GameObject> menu(new TextObject(pos, gFont, gRenderer));
+	foregroundGameObjects.push_front(menu);
 }

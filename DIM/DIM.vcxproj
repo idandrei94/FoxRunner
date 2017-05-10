@@ -29,6 +29,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mySDL_init.cpp" />
     <ClCompile Include="object_over.cpp" />
+    <ClCompile Include="object_text.cpp" />
     <ClCompile Include="score_object.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <ClInclude Include="game_sun.h" />
     <ClInclude Include="mySDL_init.h" />
     <ClInclude Include="object_over.h" />
+    <ClInclude Include="object_text.h" />
     <ClInclude Include="score_object.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

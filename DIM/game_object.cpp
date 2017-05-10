@@ -3,7 +3,7 @@
 #include <math.h>
 
 // Constructor, init the surface attribute with srf
-GameObject::GameObject(SDL_Texture* srf, SDL_Rect pos) : texture(srf), position(pos) {
+GameObject::GameObject(SDL_Texture* srf, SDL_Rect &pos) : texture(srf), position(pos) {
 	collider.radius = -1;
 	collider.x = { -1, -1 };
 }
