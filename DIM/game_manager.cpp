@@ -28,10 +28,13 @@ GameManagerCodes GameManager::manage(std::list<std::shared_ptr<GameObject> > &ga
 			// Check if it's a coin or not
 			if (!std::dynamic_pointer_cast<CoinObject>(*it) ) {
 				// It's not a coin
-				printf("GAME OVER\n");
 				return GameManagerCodes::GAME_END;
 			}
-			else printf("Coin collision\n");
+			else {
+				// It's a coin, destroy it and increase the score
+				it = gameObjects.erase(it);
+				score->increaseScore();
+			}
 		}
 	}
 
@@ -44,32 +47,26 @@ void GameManager::generate(std::list<std::shared_ptr<GameObject> > &gameObjects,
 	bool ok = true;
 	if (random < COIN_CHANCE) {
 		random = dis(gen);
-		printf("Attempting to spawn a coin: ");
 		SDL_Rect position = { 640, 230-(random/500), 32, 32 };
 		std::shared_ptr<GameObject> coin(new CoinObject(speed, coinTexture, position));
 		for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
 			if (GameObject::collide(*coin->getCollider(), *(*it)->getCollider())) {
-				printf("Failed\n");
 				ok = false;
 			}
 		}
 		if (ok) {
-			printf("@ %d:%d\n", coin->getPosition()->x, coin->getPosition()->y);
 			gameObjects.push_back(coin);
 		}
 	}
 	ok = true;
 	random = dis(gen);
 	if (random < DOG_CHANCE) {
-		printf("Attempting to spawn a dog: ");
 		SDL_Rect position = { 640,255,130,130 };
 		std::shared_ptr<DogObject> dog(new DogObject(speed, dogTexture, position));
 		if (lastDog != nullptr && lastDog->getCollider()->x.x > DOG_MIN_DISTANCE) {
 			ok = false;
-			printf("Failed\n");
 		}
 		if (ok ) {
-			printf("@ %d:%d\n", dog->getPosition()->x, dog->getPosition()->y);
 			gameObjects.push_back(dog);
 			lastDog = dog;
 			DOG_CHANCE++;
@@ -80,18 +77,16 @@ void GameManager::generate(std::list<std::shared_ptr<GameObject> > &gameObjects,
 int GameManager::cleanup(std::list<std::shared_ptr<GameObject> > &gameObjects, std::list<std::shared_ptr<GameObject> > &foregroundGameObjects) {
 	int count = 0;
 	for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end();) {
-		if ((*it)->getPosition()->x < 0) {
+		if ((*it)->getPosition()->x < -200) {
 			it = gameObjects.erase(it);
 			count++;
-			printf("Cleaned 1 object\n");
 		}
 		else ++it;
 	}
 	for (std::list<std::shared_ptr<GameObject> >::iterator it = foregroundGameObjects.begin(); it != foregroundGameObjects.end();) {
-		if ((*it)->getPosition()->x < 0) {
+		if ((*it)->getPosition()->x < -200) {
 			it = foregroundGameObjects.erase(it);
 			count++;
-			printf("Cleaned 1 object\n");
 		}
 		else ++it;
 	}
@@ -100,4 +95,12 @@ int GameManager::cleanup(std::list<std::shared_ptr<GameObject> > &gameObjects, s
 
 int GameManager::getSpeed() {
 	return speed;
+}
+
+void GameManager::doAction(const KeyAction &action) {
+	switch (action) {
+	case KeyAction::JUMP:
+		fox->jump();
+		break;
+	}
 }

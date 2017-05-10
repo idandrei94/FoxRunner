@@ -11,8 +11,13 @@ private:
 	int frameCounter = 0;
 	int currentFrame = 0;
 	int speed;
+	bool isJumping = false;
+	static const int JUMP_STRENGTH = 1000;
+	int verticalAcc = 0;
+	int GROUND_LEVEL = 280;
 public:
 	FoxObject(SDL_Texture* srf, SDL_Rect pos);
 	void advance(const int &frameCount);
 	SDL_Rect* getRect();
+	void jump();
 };

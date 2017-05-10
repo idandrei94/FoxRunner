@@ -41,6 +41,9 @@ SDL_Texture *gFox = nullptr;
 //The obstacle dog spritesheet
 SDL_Texture* gDog = nullptr;
 
+//The Game Over overlay
+SDL_Texture* gOver = nullptr;
+
 //Game renderer
 SDL_Renderer* gRenderer = nullptr;
 
@@ -176,6 +179,12 @@ bool loadMedia() {
 		success = false;
 	}
 
+	gOver = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/game_over.png"));
+	if (gCoin == NULL) {
+		printf("Unable to load image %s! SDL Error: %s\n", "res/game_over.png", SDL_GetError());
+		success = false;
+	}
+
 	gSong1 = Mix_LoadWAV("res/OST1.wav");
 	if (gSong1 == NULL)
 	{
@@ -189,11 +198,18 @@ bool loadMedia() {
 void close() {
 	//Deallocate surface
 	SDL_FreeSurface(gBackground1);
+	SDL_FreeSurface(gBackground2);
+	SDL_DestroyTexture(gSun);
+	SDL_DestroyTexture(gCoin);
+	SDL_DestroyTexture(gFox);
+	SDL_DestroyTexture(gDog);
+	SDL_DestroyTexture(gOver);
 	gBackground1 = nullptr;
 	gSun = nullptr;
 	gCoin = nullptr;
 	gFox = nullptr;
 	gDog = nullptr;
+	gOver = nullptr;
 
 	//Destroy window
 	SDL_DestroyWindow(gWindow);
@@ -243,6 +259,13 @@ int startGame() {
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
+			}
+			else if (e.type == SDL_KEYDOWN) {
+				switch (e.key.keysym.sym) {
+				case SDLK_SPACE:
+					gManager->doAction(KeyAction::JUMP);
+					break;
+				}
 			}
 		}
 

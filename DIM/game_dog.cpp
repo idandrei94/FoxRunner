@@ -15,7 +15,7 @@ DogObject::DogObject(int speed, SDL_Texture* srf, SDL_Rect pos) : GameObject(srf
 	frames[3].y = 90;
 
 
-	collider.radius = 95;
+	collider.radius = 25;
 	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 }
 

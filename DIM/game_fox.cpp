@@ -14,14 +14,38 @@ FoxObject::FoxObject(SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	frames[3].x = 220;
 	frames[3].y = 220;
 
-	collider.radius = 40;
+	collider.radius = 50;
 	collider.x = { position.x + position.w/2, position.y + position.h/2 };
+
+	GROUND_LEVEL = pos.y;
 }
 
 
 void FoxObject::advance(const int &frameCount) {
+	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 	currentFrame = (frameCount / frameskip) % FRAMES;
+	if (isJumping) {
+		verticalAcc -= 40;
+		if (position.y - verticalAcc / 100 <= GROUND_LEVEL) {
+			position.y -= verticalAcc / 100; 
+		}
+		else
+		{
+			position.y = GROUND_LEVEL;
+			isJumping = false;
+			verticalAcc = 0;
+		}
+
+	}
 }
 SDL_Rect* FoxObject::getRect() {
 	return &frames[currentFrame];
+}
+
+
+void FoxObject::jump() {
+	if (!isJumping) {
+		verticalAcc = JUMP_STRENGTH;
+		isJumping = true;
+	}
 }
