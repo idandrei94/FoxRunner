@@ -25,7 +25,7 @@ void FoxObject::advance(const int &frameCount) {
 	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 	currentFrame = (frameCount / frameskip) % FRAMES;
 	if (isJumping) {
-		verticalAcc -= 40;
+		verticalAcc -= 45;
 		if (position.y - verticalAcc / 100 <= GROUND_LEVEL) {
 			position.y -= verticalAcc / 100; 
 		}
@@ -39,7 +39,17 @@ void FoxObject::advance(const int &frameCount) {
 	}
 }
 SDL_Rect* FoxObject::getRect() {
-	return &frames[currentFrame];
+	if (isJumping) {
+		if (verticalAcc > 0) {
+			return &frames[1];
+		}
+		else {
+			return &frames[3];
+		}
+	}
+	else {
+		return &frames[currentFrame];
+	}
 }
 
 

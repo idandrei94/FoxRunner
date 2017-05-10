@@ -9,4 +9,5 @@ public:
 	ScoreObject();
 	int getScore();
 	void increaseScore();
+	void reset();
 };

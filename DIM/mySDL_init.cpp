@@ -71,12 +71,6 @@ SDL_Surface* loadSurface(std::string path);
 // Create the game objects
 void initGameObjects();
 
-// List containing all game objects
-std::list<std::shared_ptr<GameObject> > gameObjects;
-
-// List containing foreground game objects (displayed on top of the others)
-std::list<std::shared_ptr<GameObject> >foregroundGameObjects;
-
 // Background slider object
 BackgroundObject *backgroundObject = nullptr;
 
@@ -265,6 +259,9 @@ int startGame() {
 				case SDLK_SPACE:
 					gManager->doAction(KeyAction::JUMP);
 					break;
+				case SDLK_r:
+					gManager->doAction(KeyAction::START_GAME);
+					break;
 				}
 			}
 		}
@@ -273,11 +270,9 @@ int startGame() {
 		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 		SDL_RenderClear(gRenderer);
 
-		gManager->cleanup(gameObjects, foregroundGameObjects);
-		gManager->generate(gameObjects, foregroundGameObjects, gCoin, gDog, nullptr, gRenderer);
-		if (gManager->manage(gameObjects) == GameManagerCodes::GAME_END) {
-			printf("Hit a dog, game should stop\n");
-			//quit = true;
+		gManager->cleanup();
+		gManager->generate(gCoin, gDog, nullptr, gRenderer);
+		if (gManager->manage() == GameManagerCodes::GAME_END) {
 		}
 
 		backgroundObject->advance();

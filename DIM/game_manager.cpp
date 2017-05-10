@@ -1,5 +1,4 @@
 #include "game_manager.h"
-#include "game_manager.h"
 #include "game_coin.h"
 #include "game_dog.h"
 #include <cstdlib>
@@ -7,6 +6,13 @@
 #include <iostream>
 #include <random>
 #include <memory>
+#include "object_over.h"
+
+// List containing all game objects
+std::list<std::shared_ptr<GameObject> > gameObjects;
+//
+// List containing foreground game objects (displayed on top of the others)
+std::list<std::shared_ptr<GameObject> >foregroundGameObjects;
 
 std::random_device rd;
 std::mt19937 gen(rd());
@@ -21,28 +27,35 @@ const int DOG_MIN_DISTANCE = 350;
 
 GameManager::GameManager(const int &gSpeed, std::shared_ptr<FoxObject> gFox, std::shared_ptr<ScoreObject> gScore) : fox(gFox), score(gScore), speed(gSpeed) {}
 
-GameManagerCodes GameManager::manage(std::list<std::shared_ptr<GameObject> > &gameObjects) {
-	for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
-		if (GameObject::collide(*fox->getCollider(), *(*it)->getCollider())) {
-			// Objects collide
-			// Check if it's a coin or not
-			if (!std::dynamic_pointer_cast<CoinObject>(*it) ) {
-				// It's not a coin
-				return GameManagerCodes::GAME_END;
-			}
-			else {
-				// It's a coin, destroy it and increase the score
-				it = gameObjects.erase(it);
-				score->increaseScore();
+GameManagerCodes GameManager::manage() {
+	if (status == GameState::STATUS_PLAYING) {
+		for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
+			if (GameObject::collide(*fox->getCollider(), *(*it)->getCollider())) {
+				// Objects collide
+				// Check if it's a coin or not
+				if (!std::dynamic_pointer_cast<CoinObject>(*it)) {
+					// It's not a coin
+					// Remove the fox with the Game Over screen
+					foregroundGameObjects.remove(fox);
+					foregroundGameObjects.remove(score);
+					std::shared_ptr<GameObject> obj(new GameObject(gOver, { 0,0,640,480 }));
+					foregroundGameObjects.push_back(obj);
+					status = GameState::STATUS_DEAD;
+					return GameManagerCodes::GAME_END;
+				}
+				else {
+					// It's a coin, destroy it and increase the score
+					it = gameObjects.erase(it);
+					score->increaseScore();
+				}
 			}
 		}
 	}
-
 	return GameManagerCodes::GAME_CONTINUE;
 }
 
 
-void GameManager::generate(std::list<std::shared_ptr<GameObject> > &gameObjects, std::list<std::shared_ptr<GameObject> > &foregroundGameObjects, SDL_Texture* coinTexture, SDL_Texture* dogTexture, SDL_Texture* cloudTexture, SDL_Renderer *renderer) {
+void GameManager::generate(SDL_Texture* coinTexture, SDL_Texture* dogTexture, SDL_Texture* cloudTexture, SDL_Renderer *renderer) {
 	int random = dis(gen);
 	bool ok = true;
 	if (random < COIN_CHANCE) {
@@ -74,7 +87,7 @@ void GameManager::generate(std::list<std::shared_ptr<GameObject> > &gameObjects,
 	}
 }
 
-int GameManager::cleanup(std::list<std::shared_ptr<GameObject> > &gameObjects, std::list<std::shared_ptr<GameObject> > &foregroundGameObjects) {
+int GameManager::cleanup() {
 	int count = 0;
 	for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end();) {
 		if ((*it)->getPosition()->x < -200) {
@@ -100,7 +113,18 @@ int GameManager::getSpeed() {
 void GameManager::doAction(const KeyAction &action) {
 	switch (action) {
 	case KeyAction::JUMP:
-		fox->jump();
+		if (status == GameState::STATUS_PLAYING) {
+			printf("Jumping\n");
+			fox->jump();
+		}
+		break;
+	case KeyAction::START_GAME:
+		if (status != GameState::STATUS_PLAYING) {
+			score->reset();
+			status = GameState::STATUS_PLAYING;
+			foregroundGameObjects.clear();
+			foregroundGameObjects.push_front(fox);
+		}
 		break;
 	}
 }

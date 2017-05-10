@@ -8,3 +8,5 @@ void ScoreObject::increaseScore() {
 	++score;
 	printf("Score >>> %d\n", score);
 }
+
+void ScoreObject::reset() { score = 0; }
