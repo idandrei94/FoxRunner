@@ -59,3 +59,8 @@ void FoxObject::jump() {
 		isJumping = true;
 	}
 }
+
+void FoxObject::reset() {
+	verticalAcc = 0;
+	isJumping = false;
+}

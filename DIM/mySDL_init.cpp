@@ -278,6 +278,12 @@ int startGame() {
 				case SDLK_r:
 					gManager->doAction(KeyAction::START_GAME);
 					break;
+				case SDLK_m:
+					if (Mix_Volume(-1, -1) == 0)
+						Mix_Volume(-1, 128);
+					else
+						Mix_Volume(-1, 0);
+					break;
 				}
 			}
 		}

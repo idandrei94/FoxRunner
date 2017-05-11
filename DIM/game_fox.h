@@ -20,4 +20,5 @@ public:
 	void advance(const int &frameCount);
 	SDL_Rect* getRect();
 	void jump();
+	void reset();
 };

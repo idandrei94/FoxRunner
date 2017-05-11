@@ -23,12 +23,13 @@ std::shared_ptr<DogObject> lastDog;
 const int COIN_CHANCE = 500;
 int DOG_CHANCE = 100;
 const int DOG_MIN_DISTANCE = 350;
+int immunityFrames = 60;
 
 
 GameManager::GameManager(const int &gSpeed, std::shared_ptr<FoxObject> gFox, std::shared_ptr<ScoreObject> gScore) : fox(gFox), score(gScore), speed(gSpeed) {}
 
 GameManagerCodes GameManager::manage() {
-	if (status == GameState::STATUS_PLAYING) {
+	if (status == GameState::STATUS_PLAYING && !immunityFrames) {
 		for (std::list<std::shared_ptr<GameObject> >::iterator it = gameObjects.begin(); it != gameObjects.end(); it++) {
 			if (GameObject::collide(*fox->getCollider(), *(*it)->getCollider())) {
 				// Objects collide
@@ -58,6 +59,8 @@ GameManagerCodes GameManager::manage() {
 
 
 void GameManager::generate(SDL_Texture* coinTexture, SDL_Texture* dogTexture, SDL_Texture* cloudTexture, SDL_Renderer *renderer) {
+	if(immunityFrames > 0)
+		immunityFrames--;
 	int random = dis(gen);
 	bool ok = true;
 	if (random < COIN_CHANCE) {
@@ -127,7 +130,11 @@ void GameManager::doAction(const KeyAction &action) {
 			status = GameState::STATUS_PLAYING;
 			foregroundGameObjects.clear();
 			foregroundGameObjects.push_front(score);
+			SDL_Rect pos = { 5, 280, 120, 100 };
+			fox->setPosition(pos);
+			fox->reset();
 			foregroundGameObjects.push_front(fox);
+			immunityFrames = 60;
 		}
 		break;
 	}
