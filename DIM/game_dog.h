@@ -11,6 +11,7 @@ private:
 	int frameCounter = 0;
 	int currentFrame = 0;
 	int speed;
+	int frame = 0;
 public:
 	DogObject(int speed, SDL_Texture* srf, SDL_Rect pos);
 	void advance(const int &frameCount);

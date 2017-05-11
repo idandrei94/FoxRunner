@@ -45,8 +45,12 @@ SDL_Texture* gDog = nullptr;
 //The Game Over overlay
 SDL_Texture* gOver = nullptr;
 
+//Clouds
+SDL_Texture* gCloud = nullptr;
+
 //Game renderer
 SDL_Renderer* gRenderer = nullptr;
+
 
 //Game manager, keeps track of score/collisions
 GameManager* gManager;
@@ -188,6 +192,12 @@ bool loadMedia() {
 		success = false;
 	}
 
+	gCloud = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/cloud.png"));
+	if (gCoin == NULL) {
+		printf("Unable to load image %s! SDL Error: %s\n", "res/cloud.png", SDL_GetError());
+		success = false;
+	}
+
 	gSong1 = Mix_LoadWAV("res/OST1.wav");
 	if (gSong1 == NULL)
 	{
@@ -214,12 +224,14 @@ void close() {
 	SDL_DestroyTexture(gFox);
 	SDL_DestroyTexture(gDog);
 	SDL_DestroyTexture(gOver);
+	SDL_DestroyTexture(gCloud);
 	gBackground1 = nullptr;
 	gSun = nullptr;
 	gCoin = nullptr;
 	gFox = nullptr;
 	gDog = nullptr;
 	gOver = nullptr;
+	gCloud = nullptr;
 
 	//Destroy window
 	SDL_DestroyWindow(gWindow);
@@ -293,7 +305,7 @@ int startGame() {
 		SDL_RenderClear(gRenderer);
 
 		gManager->cleanup();
-		gManager->generate(gCoin, gDog, nullptr, gRenderer);
+		gManager->generate(gCoin, gDog, gCloud, gRenderer);
 		if (gManager->manage() == GameManagerCodes::GAME_END) {
 		}
 

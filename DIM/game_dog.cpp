@@ -21,7 +21,7 @@ DogObject::DogObject(int speed, SDL_Texture* srf, SDL_Rect pos) : GameObject(srf
 
 
 void DogObject::advance(const int &frameCount) {
-	currentFrame = (frameCount / frameskip) % FRAMES;
+	currentFrame = (frame++ / frameskip) % FRAMES;
 	position.x -= speed;
 	collider.x = { position.x + position.w / 2, position.y + position.h / 2 };
 }
