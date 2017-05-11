@@ -33,7 +33,6 @@ enum class GameState {
 
 class GameManager {
 private:
-	/// TODO WE MUST CHANGE THIS TO MENU BY DEFAULT
 	GameState status = GameState :: STATUS_MENU;
 	std::shared_ptr<FoxObject> fox = nullptr;
 	std::shared_ptr<ScoreObject> score = nullptr;

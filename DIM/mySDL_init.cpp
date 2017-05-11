@@ -1,19 +1,17 @@
-#include "mySDL_init.h"
-#include <stdio.h>
+#include <SDL_image.h>
+#include <list>
 #include <string>
-
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+#include <memory>
+#include "mySDL_init.h"
 #include "game_sun.h"
 #include "game_object.h"
-#include <SDL_image.h>
 #include "background_object.h"
 #include "game_coin.h"
 #include "game_fox.h"
 #include "game_dog.h"
-#include <list>
 #include "game_manager.h"
-#include <memory>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 #include "object_text.h"
 
 // The game speed
@@ -96,7 +94,7 @@ bool init() {
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		//printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		success = false;
 	}
 	else 
@@ -105,7 +103,7 @@ bool init() {
 		gWindow = SDL_CreateWindow("The quick brown fox jumps over the lazy dog.", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
-			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			//printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			success = false;
 		}
 		else
@@ -113,7 +111,7 @@ bool init() {
 			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			if (gRenderer == NULL)
 			{
-				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+				//printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
 				success = false;
 			}
 			else
@@ -125,16 +123,16 @@ bool init() {
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init(imgFlags) & imgFlags))
 				{
-					printf("SDL_image could not initialize!\n");
+					//printf("SDL_image could not initialize!\n");
 					//success = false;
 				}
 				if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 2048) < 0) {
-					printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", SDL_GetError());
+					//printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", SDL_GetError());
 					success = false;
 				} 
 				if (TTF_Init() == -1)
 				{
-					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+					//printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 					success = false;
 				}
 			}
@@ -151,64 +149,64 @@ bool loadMedia() {
 	gBackground1 = loadSurface("res/background1.png");
 	if (gBackground1 == NULL)
 	{
-		printf("Unable to load image %s! SDL Error: %s\n", "res/background1.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/background1.png", SDL_GetError());
 		success = false;
 	}
 
 	gBackground2 = loadSurface("res/background2.png");
 	if (gBackground2 == NULL)
 	{
-		printf("Unable to load image %s! SDL Error: %s\n", "res/background2.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/background2.png", SDL_GetError());
 		success = false;
 	}
 
 	gSun = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/sun.png"));
 	if (gSun == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/sun.png", SDL_GetError());
 		success = false;
 	}
 
 	gCoin = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/coin.png"));
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/coin.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/coin.png", SDL_GetError());
 		success = false;
 	}
 
 	gFox = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/fox.png"));
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/fox.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/fox.png", SDL_GetError());
 		success = false;
 	}
 
 	gDog = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/dog.png"));
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/dog.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/dog.png", SDL_GetError());
 		success = false;
 	}
 
 	gOver = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/game_over.png"));
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/game_over.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/game_over.png", SDL_GetError());
 		success = false;
 	}
 
 	gCloud = SDL_CreateTextureFromSurface(gRenderer, loadSurface("res/cloud.png"));
 	if (gCoin == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/cloud.png", SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", "res/cloud.png", SDL_GetError());
 		success = false;
 	}
 
 	gSong1 = Mix_LoadWAV("res/OST1.wav");
 	if (gSong1 == NULL)
 	{
-		printf("Failed to load medium sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		//printf("Failed to load medium sound effect! SDL_mixer Error: %s\n", Mix_GetError());
 		success = false;
 	}
 	
 	gFont = TTF_OpenFont("res/font.ttf", 28);
 	if (gFont == NULL)
 	{
-		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
+		//printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
 	}
 
@@ -258,13 +256,13 @@ void close() {
 int startGame() {
 	if (!init())
 	{
-		printf("Failed to initialize!\n");
+		//printf("Failed to initialize!\n");
 	}
 	else
 	{
 		if (!loadMedia())
 		{
-			printf("Failed to load media!\n");
+			//printf("Failed to load media!\n");
 		}
 	}
 	initGameObjects();
@@ -339,7 +337,7 @@ SDL_Surface* loadSurface(std::string path) {
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == nullptr)
 	{
-		printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+		//printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
 	}
 	else
 	{

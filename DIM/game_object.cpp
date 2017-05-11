@@ -1,6 +1,4 @@
 #include "game_object.h"
-#include <stdio.h>
-#include <math.h>
 
 // Constructor, init the surface attribute with srf
 GameObject::GameObject(SDL_Texture* srf, SDL_Rect &pos) : texture(srf), position(pos) {

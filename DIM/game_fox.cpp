@@ -1,5 +1,4 @@
 #include "game_fox.h"
-#include <stdio.h>
 
 FoxObject::FoxObject(SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	this->speed = speed;

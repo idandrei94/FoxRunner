@@ -1,12 +1,9 @@
 #include "game_manager.h"
 #include "game_coin.h"
 #include "game_dog.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
 #include <random>
-#include <memory>
 #include "object_over.h"
+#include "object_cloud.h"
 
 // List containing all game objects
 std::list<std::shared_ptr<GameObject> > gameObjects;
@@ -21,9 +18,11 @@ std::uniform_int_distribution<> dis(1, 10000);
 std::shared_ptr<DogObject> lastDog;
 
 const int COIN_CHANCE = 500;
+const int CLOUD_CHANCE = 100;
 int DOG_CHANCE = 100;
 const int DOG_MIN_DISTANCE = 350;
 int immunityFrames = 60;
+const int cloudCooldown = 60;
 
 
 GameManager::GameManager(const int &gSpeed, std::shared_ptr<FoxObject> gFox, std::shared_ptr<ScoreObject> gScore) : fox(gFox), score(gScore), speed(gSpeed) {}
@@ -90,6 +89,18 @@ void GameManager::generate(SDL_Texture* coinTexture, SDL_Texture* dogTexture, SD
 			DOG_CHANCE++;
 		}
 	}
+	random = dis(gen);
+	if (random < CLOUD_CHANCE ) {
+		random = dis(gen);
+		random = dis(gen);
+		float ratio = 1 + random / 20000.0;
+		printf("Random ration of %f\n", ratio);
+		SDL_Rect position = { 640, 100-random/100, 120*ratio, 50*ratio};
+		int cloudSpeed = speed*0.5;
+		std::shared_ptr<CloudObject> cloud(new CloudObject(cloudSpeed, cloudTexture, position));
+		gameObjects.push_back(cloud);
+		printf("Spawned cloud %d x %d.\n", position.w, position.h);
+	}
 }
 
 int GameManager::cleanup() {
@@ -119,7 +130,6 @@ void GameManager::doAction(const KeyAction &action) {
 	switch (action) {
 	case KeyAction::JUMP:
 		if (status == GameState::STATUS_PLAYING) {
-			printf("Jumping\n");
 			fox->jump();
 		}
 		break;
@@ -135,6 +145,7 @@ void GameManager::doAction(const KeyAction &action) {
 			fox->reset();
 			foregroundGameObjects.push_front(fox);
 			immunityFrames = 60;
+			DOG_CHANCE = 100;
 		}
 		break;
 	}

@@ -1,9 +1,7 @@
-﻿  game_coin.cpp
-  Generating Code...
-  Compiling...
-  game_manager.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  mySDL_init.cpp
+﻿  game_manager.cpp
+c:\users\dan iorga\documents\visual studio 2017\projects\dim\dim\game_manager.cpp(96): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\dan iorga\documents\visual studio 2017\projects\dim\dim\game_manager.cpp(98): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\dan iorga\documents\visual studio 2017\projects\dim\dim\game_manager.cpp(98): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dan iorga\documents\visual studio 2017\projects\dim\dim\game_manager.cpp(99): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   DIM.vcxproj -> C:\Users\Dan Iorga\documents\visual studio 2017\Projects\DIM\Debug\DIM.exe
   DIM.vcxproj -> C:\Users\Dan Iorga\documents\visual studio 2017\Projects\DIM\Debug\DIM.pdb (Partial PDB)

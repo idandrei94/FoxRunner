@@ -1,5 +1,4 @@
 #include "game_sun.h"
-#include <stdio.h>
 
 SunObject::SunObject(SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	frames[0].w = frames[1].w = frames[2].w = 64;

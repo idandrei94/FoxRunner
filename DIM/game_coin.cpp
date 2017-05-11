@@ -1,5 +1,4 @@
 #include "game_coin.h"
-#include <stdio.h>
 
 CoinObject::CoinObject(int speed, SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	this->speed = speed;

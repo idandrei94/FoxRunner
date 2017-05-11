@@ -1,5 +1,4 @@
 #include "game_dog.h"
-#include <stdio.h>
 
 DogObject::DogObject(int speed, SDL_Texture* srf, SDL_Rect pos) : GameObject(srf, pos) {
 	this->speed = speed;

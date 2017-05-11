@@ -1,5 +1,4 @@
 #include "score_object.h"
-#include <stdio.h>
 #include "game_manager.h"
 #include <string>
 
@@ -8,7 +7,6 @@ ScoreObject::ScoreObject(SDL_Rect &pos, TTF_Font* font) : GameObject(NULL, pos),
 int ScoreObject::getScore() { return score; }
 void ScoreObject::increaseScore() { 
 	++score;
-	printf("Score >>> %d\n", score);
 }
 
 void ScoreObject::reset() { score = 0; }
