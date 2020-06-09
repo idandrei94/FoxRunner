@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/DIM/v16
+/DIM/Debug
+/DIM/Release
+/DIM/x64/Release
