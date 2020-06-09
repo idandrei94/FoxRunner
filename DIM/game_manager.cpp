@@ -93,10 +93,10 @@ void GameManager::generate(SDL_Texture* coinTexture, SDL_Texture* dogTexture, SD
 	if (random < CLOUD_CHANCE ) {
 		random = dis(gen);
 		random = dis(gen);
-		float ratio = 1 + random / 20000.0;
+		float ratio = 1 + random / 20000.0f;
 		printf("Random ration of %f\n", ratio);
-		SDL_Rect position = { 640, 100-random/100, 120*ratio, 50*ratio};
-		int cloudSpeed = speed*0.5;
+		SDL_Rect position = { 640, 100-random/100, static_cast<int>(120*ratio), static_cast<int>(50*ratio)};
+		int cloudSpeed = static_cast<int>(speed*0.5);
 		std::shared_ptr<CloudObject> cloud(new CloudObject(cloudSpeed, cloudTexture, position));
 		gameObjects.push_back(cloud);
 		printf("Spawned cloud %d x %d.\n", position.w, position.h);
