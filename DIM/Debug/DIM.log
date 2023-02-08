@@ -1,34 +1,20 @@
-﻿  background_object.cpp
-  game_dog.cpp
-  game_fox.cpp
-  game_coin.cpp
-  game_manager.cpp
-  game_object.cpp
-  game_sun.cpp
-  main.cpp
-  mySDL_init.cpp
-  object_cloud.cpp
-  object_over.cpp
-  object_text.cpp
-  score_object.cpp
-  Generating Code...
-  DIM.vcxproj -> C:\Users\iorga_a\Downloads\FoxRunner\Debug\DIM.exe
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libFLAC-8.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libfreetype-6.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libjpeg-9.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libmodplug-1.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libmpg123-0.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libogg-0.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libopus-0.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libopusfile-0.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libpng16-16.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libtiff-5.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libvorbis-0.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libvorbisfile-3.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\libwebp-7.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_image.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_mixer.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_ttf.dll
-  C:\Users\iorga_a\Downloads\FoxRunner\\Dependencies\SDL2\lib\x86\zlib1.dll
-         18 file(s) copied.
+﻿  DIM.vcxproj -> C:\Users\home\Source\Repos\FoxRunner\Debug\DIM.exe
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libFLAC-8.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libfreetype-6.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libjpeg-9.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libmodplug-1.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libmpg123-0.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libogg-0.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libopus-0.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libopusfile-0.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libpng16-16.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libtiff-5.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libvorbis-0.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libvorbisfile-3.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libwebp-7.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_image.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_mixer.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\SDL2_ttf.dll
+  C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\zlib1.dll
+         18 Datei(en) kopiert.
