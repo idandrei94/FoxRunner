@@ -1,17 +1,4 @@
-﻿  background_object.cpp
-  game_dog.cpp
-  game_fox.cpp
-  game_coin.cpp
-  game_manager.cpp
-  game_object.cpp
-  game_sun.cpp
-  main.cpp
-  mySDL_init.cpp
-  object_cloud.cpp
-  object_over.cpp
-  object_text.cpp
-  score_object.cpp
-  Generating Code...
+﻿  LINK : C:\Users\home\Source\Repos\FoxRunner\Debug\DIM.exe not found or not built by the last incremental link; performing full link
   DIM.vcxproj -> C:\Users\home\Source\Repos\FoxRunner\Debug\DIM.exe
   C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libFLAC-8.dll
   C:\Users\home\Source\Repos\FoxRunner\\Dependencies\SDL2\lib\x86\libfreetype-6.dll

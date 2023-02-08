@@ -1,6 +1,12 @@
 ﻿
 #-------------CPP-----------------
 
+/.vs/DIM/v16
+/DIM/Debug
+/DIM/Release
+/DIM/x64/Release
+/Debug
+/Release
 
 # Prerequisites
 *.d
